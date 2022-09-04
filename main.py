@@ -7,7 +7,7 @@ friendly_db = mysql.connector.connect(
   # password="up",
   database="friendly_db"
 )
-
+#hello
 mycursor = friendly_db.cursor()
 
 # mycursor.execute("CREATE DATABASE h")
