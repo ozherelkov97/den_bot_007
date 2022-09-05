@@ -1,8 +1,6 @@
 from create_bot import bot
-from keyboards import menu_keyboard, create_keyboard
-
-
-from src.utils import new_record, generate_text_after_creation, get_user_records
+from keyboards import menu_keyboard, back_keyboard
+from src.utils import new_record, del_record, show_user_records_list
 
 
 @bot.message_handler(commands=['start'])
@@ -14,12 +12,14 @@ def start_message(message):
 @bot.message_handler(content_types=['text'])
 def main_menu(message):
     if message.text == 'Создать':
-        msg_create = bot.send_message(message.chat.id, 'Отправь текст напоминалки', reply_markup=create_keyboard)
+        msg_create = bot.send_message(message.chat.id, 'Отправь текст напоминалки', reply_markup=back_keyboard)
         bot.register_next_step_handler(msg_create, create_record_text)
     elif message.text == 'Удалить':
-        bot.send_message(message.chat.id, 'Я пока только напоминалки умею(', reply_markup=menu_keyboard)
+        reply = show_user_records_list(message.from_user.username, mode='delete')
+        msg_create = bot.send_message(message.chat.id, reply, reply_markup=back_keyboard)
+        bot.register_next_step_handler(msg_create, delete_record)
     elif message.text == 'Список':
-        reply = get_user_records(message.from_user.username)
+        reply = show_user_records_list(message.from_user.username, mode='list')
         msg_create = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
         bot.register_next_step_handler(msg_create, main_menu)
 
@@ -40,6 +40,23 @@ def create_record_cron(message, record_text):
     reply = new_record(message, record_text)
     new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
     bot.register_next_step_handler(new_command, main_menu)
+
+
+@bot.message_handler(content_types=['text'])
+def delete_record(message):
+    if message.text == 'Назад':
+        return_back = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
+        bot.register_next_step_handler(return_back, main_menu)
+    else:
+        try:
+            num = int(message.text)
+            reply = del_record(message, num)
+            new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
+            bot.register_next_step_handler(new_command, main_menu)
+        except ValueError:
+            msg_create = bot.send_message(message.chat.id, 'Не понял тебя. Введи номер для удаления',
+                                          reply_markup=back_keyboard)
+            bot.register_next_step_handler(msg_create, delete_record)
 
 
 if __name__ == '__main__':

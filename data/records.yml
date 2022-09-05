@@ -1,28 +1,30 @@
-4ff6c1cacbf547548c3fad77fd772512:
-  cron_text: 2 раза
-  record_text: Привет
+0c637a8a1dfe4804aa033dd7269c9c7c:
+  cron_text: Ппп
+  num: 5
+  record_text: Пол
   username: ozherelkov
-f66bfd53fde0497b9f48db4a49dd1f0a:
-  cron_text: '1'
-  record_text: Привет ещё раз
+359a5d81136e41fd9208527a114e6465:
+  cron_text: Ллл
+  num: 4
+  record_text: Да
   username: ozherelkov
-9b5c654479e047608106d454f160057d:
-  cron_text: О
-  record_text: Создать
+5efb1c65e2a24564a3d3a74a767a436f:
+  cron_text: И
+  num: 2
+  record_text: О
   username: ozherelkov
-4d5b3de68ede48b7b421ba329eea8b54:
-  cron_text: Правее
-  record_text: Приает
+bcd1302b0dfd4b96b4faddc2a0dbb576:
+  cron_text: То
+  num: 3
+  record_text: Про
   username: ozherelkov
-0af9f9456ff54b89acadedee3310d661:
-  cron_text: '3'
-  record_text: И
+8639ea0924434de79165afbee448a703:
+  cron_text: Про
+  num: 5
+  record_text: Его
   username: ozherelkov
-a1485a2c5bdf4cb5a6bf3beb377ba450:
-  cron_text: О
-  record_text: Ддд
-  username: ozherelkov
-2f8204110c2f41e7a69e61a93d9a9376:
-  cron_text: О
-  record_text: Вау
+7fb7be1a7b994abcae9af538d18666ae:
+  cron_text: Пап
+  num: 6
+  record_text: Лол
   username: ozherelkov
