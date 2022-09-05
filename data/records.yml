@@ -1,4 +1,3 @@
-
 4ff6c1cacbf547548c3fad77fd772512:
   cron_text: 2 раза
   record_text: Привет
@@ -11,11 +10,19 @@ f66bfd53fde0497b9f48db4a49dd1f0a:
   cron_text: О
   record_text: Создать
   username: ozherelkov
-0787b90fac8c429cbd097d6bbe08e1c1:
-  cron_text: Неа 1
-  record_text: Лол
+4d5b3de68ede48b7b421ba329eea8b54:
+  cron_text: Правее
+  record_text: Приает
   username: ozherelkov
-3d4740297dad4949a4c5b60f4d517fab:
-  cron_text: '564'
-  record_text: Ща
+0af9f9456ff54b89acadedee3310d661:
+  cron_text: '3'
+  record_text: И
+  username: ozherelkov
+a1485a2c5bdf4cb5a6bf3beb377ba450:
+  cron_text: О
+  record_text: Ддд
+  username: ozherelkov
+2f8204110c2f41e7a69e61a93d9a9376:
+  cron_text: О
+  record_text: Вау
   username: ozherelkov
