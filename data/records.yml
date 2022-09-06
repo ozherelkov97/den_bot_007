@@ -1,28 +1,15 @@
-4ff6c1cacbf547548c3fad77fd772512:
-  cron_text: 2 раза
-  record_text: Привет
+3ae11caf23e146f49a2fe37c29ca7892:
+  create_dttm: 2022-09-06:21:00:01
+  cron_text: Ева
+  text: Оддд
   username: ozherelkov
-f66bfd53fde0497b9f48db4a49dd1f0a:
-  cron_text: '1'
-  record_text: Привет ещё раз
+8da155e7012e415dbf9b09fd2fc11744:
+  create_dttm: 2022-09-06:21:33:19
+  cron_text: '6'
+  text: '1'
   username: ozherelkov
-9b5c654479e047608106d454f160057d:
-  cron_text: О
-  record_text: Создать
-  username: ozherelkov
-4d5b3de68ede48b7b421ba329eea8b54:
-  cron_text: Правее
-  record_text: Приает
-  username: ozherelkov
-0af9f9456ff54b89acadedee3310d661:
-  cron_text: '3'
-  record_text: И
-  username: ozherelkov
-a1485a2c5bdf4cb5a6bf3beb377ba450:
-  cron_text: О
-  record_text: Ддд
-  username: ozherelkov
-2f8204110c2f41e7a69e61a93d9a9376:
-  cron_text: О
-  record_text: Вау
+ef2eeba153334bf1b73f0b454ae7b374:
+  create_dttm: 2022-09-06:20:59:47
+  cron_text: Выявлен
+  text: Род
   username: ozherelkov

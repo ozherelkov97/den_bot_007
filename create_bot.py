@@ -1,4 +1,4 @@
 import telebot
-import cfg
+from data import cfg
 
 bot = telebot.TeleBot(cfg.TOKEN)
