@@ -122,3 +122,5 @@ def generate_text_create(num):
 def get_hash(record):
     records = read_records()
     return [h for h, r in records.items() if r == record][0]
+
+
