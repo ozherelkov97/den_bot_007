@@ -1,25 +1,13 @@
 new_record(message, text)
-
 del_record(message, num)
-
-dump_new_record(new_record_dict)
-
 dump_all_records(all_records_dict)
+show_user_records_list
 
-get_user_records_number(username)
-
-show_user_records_li
-
-get_user_records_list(username)
-
-read_records()
-
-sort_user_records_list(records)
 
 generate_text_list(records)
-
 generate_text_delete(records)
-
 generate_text_create(num)
 
-get_hash(record)
+# read_records()
+# get_hash(record)
+# sort_user_records_list(records)
