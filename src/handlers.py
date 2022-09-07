@@ -1,6 +1,6 @@
 from telebot import TeleBot
 from telebot.types import Message
-from keyboards import menu_keyboard, back_keyboard
+from src.keyboards import menu_keyboard, back_keyboard
 from src.utils import new_record, del_record, show_user_records_list, get_user_records_number
 
 
@@ -44,16 +44,28 @@ def delete_record(message: Message, bot: TeleBot):
         return_back = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
         bot.register_next_step_handler(return_back, main_menu, bot)
     else:
-        try:
-            num = int(message.text)
-            if num <= 0 or num > get_user_records_number(message.from_user.username):
-                msg = bot.send_message(message.chat.id, 'Нет такого номера', reply_markup=back_keyboard)
-                bot.register_next_step_handler(msg, delete_record, bot)
-            else:
-                reply = del_record(message, num)
-                new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
-                bot.register_next_step_handler(new_command, main_menu, bot)
-        except ValueError:
-            msg = bot.send_message(message.chat.id, 'Не понял тебя. Введи номер для удаления',
-                                   reply_markup=back_keyboard)
+        num = to_number(message, bot)
+        if num is None:
+            return
+        if is_bad_num(message, num):
+            msg = bot.send_message(message.chat.id, 'Нет такого номера', reply_markup=back_keyboard)
             bot.register_next_step_handler(msg, delete_record, bot)
+            return
+        reply = del_record(message, num)
+        new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
+        bot.register_next_step_handler(new_command, main_menu, bot)
+
+
+def is_bad_num(message: Message, num: int):
+    return num <= 0 or num > get_user_records_number(message.from_user.username)
+
+
+def to_number(message: Message, bot: TeleBot):
+    try:
+        num = int(message.text)
+        return num
+    except ValueError:
+        msg = bot.send_message(message.chat.id, 'Не понял тебя. Введи номер для удаления',
+                               reply_markup=back_keyboard)
+        bot.register_next_step_handler(msg, delete_record, bot)
+

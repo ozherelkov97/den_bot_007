@@ -1,4 +1,4 @@
-from create_bot import bot
+from src.create_bot import bot
 from src.handlers import start_message, main_menu, create_record_text, create_record_cron, delete_record
 
 
