@@ -1,5 +1,5 @@
 /venv/
 **/__pycache__
 data/bot_token.py
-tmp
+tmp.*
 .idea

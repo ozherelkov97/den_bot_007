@@ -1,7 +1,9 @@
 from telebot import TeleBot
 from telebot.types import Message
 from src.keyboards import menu_keyboard, back_keyboard
-from src.utils import new_record, del_record, show_user_records_list, get_user_records_number
+from src.utils import new_record, del_record, show_user_records
+from src.records import Records, update_records
+from data.cfg import RECORDS_PATH
 
 
 def start_message(message: Message, bot: TeleBot):
@@ -11,61 +13,66 @@ def start_message(message: Message, bot: TeleBot):
 
 def main_menu(message: Message, bot: TeleBot):
     if message.text == 'Создать':
+        records = update_records(RECORDS_PATH)
         msg = bot.send_message(message.chat.id, 'Отправь текст напоминалки', reply_markup=back_keyboard)
-        bot.register_next_step_handler(msg, create_record_text, bot)
+        bot.register_next_step_handler(msg, create_record_first_handler, bot, records)
     elif message.text == 'Удалить':
-        reply = show_user_records_list(message.from_user.username, mode='delete')
+        records = update_records(RECORDS_PATH)
+        reply = show_user_records(message.from_user.username, records, mode='delete')
         msg = bot.send_message(message.chat.id, reply, reply_markup=back_keyboard)
-        bot.register_next_step_handler(msg, delete_record, bot)
+        bot.register_next_step_handler(msg, delete_record_handler, bot, records)
     elif message.text == 'Список':
-        reply = show_user_records_list(message.from_user.username, mode='list')
+        records = update_records(RECORDS_PATH)
+        reply = show_user_records(message.from_user.username, records, mode='list')
         msg = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
         bot.register_next_step_handler(msg, main_menu, bot)
 
 
-def create_record_text(message: Message, bot: TeleBot):
+def create_record_first_handler(message: Message, bot: TeleBot, records: Records):
     if message.text == 'Назад':
-        msg = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
-        bot.register_next_step_handler(msg, main_menu, bot)
+        back_to_main(message, bot)
     else:
         record_text = message.text
         msg = bot.send_message(message.chat.id, 'Как часто напоминать?')
-        bot.register_next_step_handler(msg, create_record_cron, record_text, bot)
+        bot.register_next_step_handler(msg, create_record_second_handler, record_text, bot, records)
 
 
-def create_record_cron(message: Message, record_text: str, bot: TeleBot,):
-    reply = new_record(message, record_text)
+def create_record_second_handler(message: Message, record_text: str, bot: TeleBot, records: Records):
+    reply = new_record(message, record_text, records)
     msg = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
     bot.register_next_step_handler(msg, main_menu, bot)
 
 
-def delete_record(message: Message, bot: TeleBot):
+def delete_record_handler(message: Message, bot: TeleBot, records: Records):
     if message.text == 'Назад':
-        return_back = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
-        bot.register_next_step_handler(return_back, main_menu, bot)
+        back_to_main(message, bot)
     else:
-        num = to_number(message, bot)
+        num = to_number(message, bot, records)
         if num is None:
             return
-        if is_bad_num(message, num):
+        if is_bad_num(message, num, records):
             msg = bot.send_message(message.chat.id, 'Нет такого номера', reply_markup=back_keyboard)
-            bot.register_next_step_handler(msg, delete_record, bot)
+            bot.register_next_step_handler(msg, delete_record_handler, bot, records)
             return
-        reply = del_record(message, num)
+        reply = del_record(message, num, records)
         new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
         bot.register_next_step_handler(new_command, main_menu, bot)
 
 
-def is_bad_num(message: Message, num: int):
-    return num <= 0 or num > get_user_records_number(message.from_user.username)
+def is_bad_num(message: Message, num: int, records: Records):
+    return num <= 0 or num > records.get_user_records_number(message.from_user.username)
 
 
-def to_number(message: Message, bot: TeleBot):
+def to_number(message: Message, bot: TeleBot, records: Records):
     try:
         num = int(message.text)
         return num
     except ValueError:
         msg = bot.send_message(message.chat.id, 'Не понял тебя. Введи номер для удаления',
                                reply_markup=back_keyboard)
-        bot.register_next_step_handler(msg, delete_record, bot)
+        bot.register_next_step_handler(msg, delete_record_handler, bot, records)
 
+
+def back_to_main(message: Message, bot: TeleBot):
+    msg = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
+    bot.register_next_step_handler(msg, main_menu, bot)
