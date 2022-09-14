@@ -23,33 +23,34 @@ class Records:
         return len(self.get_user_records_list(username))
 
     def add_record(self, username: str, text: str, cron_text: str):
-        new_record = SingleRecord(create_dttm=datetime.now(),
-                                  username=username,
-                                  text=text,
-                                  cron_text=cron_text)
-        self.records.append(new_record)
-        self.dump_new_record(new_record)
+        new_rec = SingleRecord(create_dttm=datetime.now(),
+                               username=username,
+                               text=text,
+                               cron_text=cron_text)
+        self.records.append(new_rec)
+        self.dump_new_record(new_rec)
 
-    def delete_record(self, record: SingleRecord):
-        index = hash(record)
+    def delete_record(self, rec: SingleRecord):
+        index = self.records.index(rec)
         del self.records[index]
 
-    def dump_new_record(self, new_record: SingleRecord):
-        dict_to_dump = {hash(new_record): asdict(new_record)}
+    def dump_new_record(self, new_rec: SingleRecord):
+        dict_to_dump = {hash(new_rec): asdict(new_rec)}
         with open(self.path, 'a', encoding='utf-8') as f:
             yaml.dump(dict_to_dump, f, allow_unicode=True)
 
     def dump_all_records(self):
-        with open(self.path, 'a', encoding='utf-8') as f:
+        with open(self.path, 'w', encoding='utf-8') as f:
             for rec in self.records:
                 yaml.dump({hash(rec): asdict(rec)}, f, allow_unicode=True)
 
 
 def update_records(path: str):
-    reminders_list = []
     with open(path, 'r', encoding='utf-8') as f:
         file_dict = yaml.safe_load(f)
-    for h, r in file_dict.items():
-        next_reminder = SingleRecord(**r)
-        reminders_list.append(next_reminder)
+    reminders_list = []
+    if file_dict:
+        for h, r in file_dict.items():
+            next_reminder = SingleRecord(**r)
+            reminders_list.append(next_reminder)
     return Records(reminders_list)

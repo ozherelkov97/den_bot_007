@@ -3,7 +3,6 @@ from telebot.types import Message
 from src.keyboards import menu_keyboard, back_keyboard
 from src.utils import new_record, del_record, show_user_records
 from src.records import Records, update_records
-
 from data.cfg import RECORDS_PATH
 
 
@@ -26,12 +25,12 @@ def main_menu(message: Message, bot: TeleBot):
         records = update_records(RECORDS_PATH)
         reply = show_user_records(message.from_user.username, records, mode='list')
         msg = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
-        bot.register_next_step_handler(msg, main_menu, bot, records)
+        bot.register_next_step_handler(msg, main_menu, bot)
 
 
 def create_record_first_handler(message: Message, bot: TeleBot, records: Records):
     if message.text == 'Назад':
-        back_to_main(message, bot, records)
+        back_to_main(message, bot)
     else:
         record_text = message.text
         msg = bot.send_message(message.chat.id, 'Как часто напоминать?')
@@ -41,12 +40,12 @@ def create_record_first_handler(message: Message, bot: TeleBot, records: Records
 def create_record_second_handler(message: Message, record_text: str, bot: TeleBot, records: Records):
     reply = new_record(message, record_text, records)
     msg = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
-    bot.register_next_step_handler(msg, main_menu, bot, records)
+    bot.register_next_step_handler(msg, main_menu, bot)
 
 
 def delete_record_handler(message: Message, bot: TeleBot, records: Records):
     if message.text == 'Назад':
-        back_to_main(message, bot, records)
+        back_to_main(message, bot)
     else:
         num = to_number(message, bot, records)
         if num is None:
@@ -57,7 +56,7 @@ def delete_record_handler(message: Message, bot: TeleBot, records: Records):
             return
         reply = del_record(message, num, records)
         new_command = bot.send_message(message.chat.id, reply, reply_markup=menu_keyboard)
-        bot.register_next_step_handler(new_command, main_menu, bot, records)
+        bot.register_next_step_handler(new_command, main_menu, bot)
 
 
 def is_bad_num(message: Message, num: int, records: Records):
@@ -74,6 +73,6 @@ def to_number(message: Message, bot: TeleBot, records: Records):
         bot.register_next_step_handler(msg, delete_record_handler, bot, records)
 
 
-def back_to_main(message: Message, bot: TeleBot, records: Records):
+def back_to_main(message: Message, bot: TeleBot):
     msg = bot.send_message(message.chat.id, 'Назад', reply_markup=menu_keyboard)
-    bot.register_next_step_handler(msg, main_menu, bot, records)
+    bot.register_next_step_handler(msg, main_menu, bot)
