@@ -1,11 +1,9 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from telebot.types import Message
-
 import yaml
 
 
-@dataclass(frozen=True, order=True)
+@dataclass(frozen=True, unsafe_hash=True, order=True)
 class SingleRecord:
     create_dttm: datetime
     username: str
@@ -37,21 +35,21 @@ class Records:
         del self.records[index]
 
     def dump_new_record(self, new_record: SingleRecord):
-        dict_to_dump = asdict(new_record)
+        dict_to_dump = {hash(new_record): asdict(new_record)}
         with open(self.path, 'a', encoding='utf-8') as f:
             yaml.dump(dict_to_dump, f, allow_unicode=True)
 
+    def dump_all_records(self):
+        with open(self.path, 'a', encoding='utf-8') as f:
+            for rec in self.records:
+                yaml.dump({hash(rec): asdict(rec)}, f, allow_unicode=True)
 
-reminders_list = []
-with open('data/records.yml', 'r', encoding='utf-8') as f:
-    file_dict = yaml.safe_load(f)
 
-for h, r in file_dict.items():
-    next_reminder = SingleRecord(**r)
-    print(next_reminder.__hash__())
-    print(next_reminder)
-    print(asdict(next_reminder))
-    reminders_list.append(next_reminder)
-
-records = Records(reminders_list)
-print(records.get_user_records_number('ozherelkov'))
+def update_records(path: str):
+    reminders_list = []
+    with open(path, 'r', encoding='utf-8') as f:
+        file_dict = yaml.safe_load(f)
+    for h, r in file_dict.items():
+        next_reminder = SingleRecord(**r)
+        reminders_list.append(next_reminder)
+    return Records(reminders_list)
